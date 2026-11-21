@@ -24,6 +24,8 @@ export interface Project {
   links: { label: string; url: string }[];
   /** Real screenshots in /public/projects. Leave empty to show a placeholder. */
   images: { src: string; alt: string }[];
+  /** 'landscape' for web/desktop screenshots, default is phone-style portrait */
+  orientation?: "portrait" | "landscape";
   placeholderNote?: string;
   confidentialNote?: string;
 }
@@ -76,9 +78,9 @@ export const featuredProjects: Project[] = [
       "Availability checks through Cloudflare Workers to help prevent double reservations",
     ],
     tech: ["Shopify Liquid", "JavaScript", "Shopify AJAX Cart API", "Shopify Metafields", "Shopify Custom Data", "Cloudflare Workers"],
-    links: [],
+    links: [{ label: "Watch demo on LinkedIn", url: "https://lnkd.in/p/dc7kwaiX" }],
     images: [],
-    placeholderNote: "Screenshots or demo video to be added",
+    placeholderNote: "Demo video available on LinkedIn",
   },
   {
     id: "ai-learning",
@@ -94,11 +96,20 @@ export const featuredProjects: Project[] = [
       "Direction: interactive learning activities",
       "Direction: child-friendly mobile experience",
       "Direction: Urdu voice interaction features",
+      "Early build: \"Robo's AI Path\" with 9 lessons across 4 stages (Meet the AI World, How AI Works, AI Explorer, Safe AI User)",
+      "Early build: star-based lesson progress and a friendly robot guide, Robo",
+      "Early build: read-aloud voice settings with English / Urdu and speed options",
     ],
     tech: ["Flutter", "Dart", "Node.js", "Express", "MongoDB"],
     links: [],
-    images: [],
-    placeholderNote: "In development. Screens will be added as features are completed",
+    orientation: "landscape",
+    images: [
+      { src: "/projects/fyp-home.jpg", alt: "Robo's AI Path home screen with the Robo guide and Stage 1 lessons" },
+      { src: "/projects/fyp-lessons.jpg", alt: "Lesson stages: How AI Works and AI Explorer" },
+      { src: "/projects/fyp-voice.jpg", alt: "Robo's voice settings with English and Urdu language options" },
+    ],
+    placeholderNote: "In development",
+    confidentialNote: "Screenshots are from the early in-development build. Features and content may change.",
   },
 ];
 

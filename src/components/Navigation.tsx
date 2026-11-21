@@ -24,7 +24,9 @@ const Navigation = () => {
       const el = document.getElementById(id);
       if (el) io.observe(el);
     });
-    return () => io.disconnect();
+    const onScroll = () => { if (window.scrollY < 200) setActive(""); };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => { io.disconnect(); window.removeEventListener("scroll", onScroll); };
   }, []);
 
   return (

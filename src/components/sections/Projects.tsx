@@ -1,4 +1,4 @@
-import { ArrowUpRight, ExternalLink, Github } from "lucide-react";
+import { ArrowUpRight, ExternalLink, Github, Play } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -30,12 +30,14 @@ const CaseStudy = ({ project, featured }: { project: Project; featured?: boolean
             </DialogTrigger>
             {project.links.map((l) => (
               <Button key={l.url} asChild variant="outline">
-                <a href={l.url} target="_blank" rel="noopener noreferrer"><Github className="mr-2 h-4 w-4" />{l.label}</a>
+                <a href={l.url} target="_blank" rel="noopener noreferrer">
+                  {l.url.includes("github.com") ? <Github className="mr-2 h-4 w-4" /> : <Play className="mr-2 h-4 w-4" />}{l.label}
+                </a>
               </Button>
             ))}
           </div>
         </div>
-        <ProjectMedia project={project} limit={featured ? 3 : undefined} className={featured ? "max-w-full lg:max-w-[28rem]" : "order-first mb-5"} />
+        <ProjectMedia project={project} compact limit={featured ? 3 : undefined} className={featured ? "max-w-full lg:max-w-[28rem]" : "order-first mb-5"} />
       </div>
     </article>
 
@@ -53,7 +55,7 @@ const CaseStudy = ({ project, featured }: { project: Project; featured?: boolean
           <p className="text-muted-foreground">{project.problem}</p>
         </section>
         <section>
-          <h4 className="mb-2 font-semibold">{project.id === "ai-learning" ? "Project direction" : "What I built"}</h4>
+          <h4 className="mb-2 font-semibold">{project.id === "ai-learning" ? "Direction and current build" : "What I built"}</h4>
           <ul className="list-disc space-y-1.5 pl-5 text-muted-foreground">
             {project.built.map((b) => <li key={b}>{b.replace(/^Direction: /, "")}</li>)}
           </ul>
@@ -62,6 +64,15 @@ const CaseStudy = ({ project, featured }: { project: Project; featured?: boolean
           <h4 className="mb-2 font-semibold">Technologies</h4>
           <div className="flex flex-wrap gap-2">{project.tech.map((t) => <Badge key={t} variant="secondary" className="font-normal">{t}</Badge>)}</div>
         </section>
+        {project.links.length > 0 && (
+          <div className="flex flex-wrap gap-3">
+            {project.links.map((l) => (
+              <Button key={l.url} asChild variant="outline" size="sm">
+                <a href={l.url} target="_blank" rel="noopener noreferrer"><ExternalLink className="mr-2 h-4 w-4" />{l.label}</a>
+              </Button>
+            ))}
+          </div>
+        )}
       </div>
     </DialogContent>
   </Dialog>

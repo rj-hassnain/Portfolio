@@ -39,7 +39,7 @@ const Hero = () => (
 
         <div className="mx-auto w-full max-w-xs lg:max-w-sm">
           <div className="overflow-hidden rounded-2xl border border-border bg-card p-2 shadow-elevated">
-            <img src={profileImage} alt="Portrait of Muhammad Hassnain" width={400} height={400} className="aspect-square w-full rounded-xl object-cover" />
+            <img src={profileImage} alt="Portrait of Muhammad Hassnain" width={750} height={936} className="aspect-[4/5] w-full rounded-xl object-cover object-top" />
           </div>
         </div>
       </div>

@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import emailjs from '@emailjs/browser';
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -8,7 +7,6 @@ import { Label } from "@/components/ui/label";
 import { Mail, Github, Linkedin, MapPin, Send } from "lucide-react";
 import { profile } from "@/data/portfolio";
 import { useReveal } from "@/hooks/useReveal";
-import { useToast } from "@/hooks/use-toast";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -18,7 +16,7 @@ const Contact = () => {
     message: ""
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { toast } = useToast();
+  const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
 
   useEffect(() => {
     emailjs.init('FdkErHMYRcml8ehBe');
@@ -43,40 +41,25 @@ const Contact = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setStatus("idle");
 
     try {
-      const templateParams = {
+      const send = emailjs.send("service_xxiz3i1", "template_8g6xuwm", {
         from_name: formData.name,
         from_email: formData.email,
         subject: formData.subject,
         message: formData.message,
-        to_name: "Hassnain"
-      };
-
-      await emailjs.send(
-        'service_xxiz3i1',
-        'template_8g6xuwm',
-        templateParams
-      );
-
-      toast({
-        title: "Message Sent!",
-        description: "Thank you for your message. I'll get back to you soon!",
+        to_name: "Hassnain",
       });
-      
-      setFormData({
-        name: "",
-        email: "",
-        subject: "",
-        message: ""
-      });
+      // Don't let the form hang if the email service is slow or down.
+      const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error("timeout")), 15000));
+      await Promise.race([send, timeout]);
+
+      setStatus("success");
+      setFormData({ name: "", email: "", subject: "", message: "" });
     } catch (error) {
-      console.error('EmailJS error:', error);
-      toast({
-        title: "Error",
-        description: "Failed to send message. Please try again or contact me directly.",
-        variant: "destructive"
-      });
+      console.error("EmailJS error:", error);
+      setStatus("error");
     } finally {
       setIsSubmitting(false);
     }
@@ -122,6 +105,19 @@ const Contact = () => {
             <Button type="submit" disabled={isSubmitting} className="w-full">
               <Send className="mr-2 h-4 w-4" />{isSubmitting ? "Sending..." : "Send message"}
             </Button>
+            <div role="status" aria-live="polite">
+              {status === "success" && (
+                <p className="rounded-lg border border-primary/40 bg-primary/10 p-3 text-sm">
+                  Message sent. Thank you, I'll get back to you soon.
+                </p>
+              )}
+              {status === "error" && (
+                <p className="rounded-lg border border-destructive/50 bg-destructive/10 p-3 text-sm">
+                  Failed to send. The server is busy right now. Please contact me directly at{" "}
+                  <a className="font-medium underline underline-offset-4" href={`mailto:${profile.email}`}>{profile.email}</a>.
+                </p>
+              )}
+            </div>
             <p className="text-center text-xs text-muted-foreground">Or email me directly at <a className="text-primary hover:underline" href={`mailto:${profile.email}`}>{profile.email}</a></p>
           </form>
         </div>
